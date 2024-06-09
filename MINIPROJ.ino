@@ -1,3 +1,7 @@
+#include <WiFi.h>
+#include <WiFiClientSecure.h>
+#include <UniversalTelegramBot.h>
+
 #include <TensorFlowLite_ESP32.h>
 
 #include "tensorflow/lite/c/common.h"
@@ -34,13 +38,18 @@
 
 unsigned long tm_to_disp;
 
-// #include <fb_gfx.h>
+const char* ssid = "Keshav";
+const char* password = "miniproject";
+
+#define BOTtoken "7023014883:AAF4C_Ksz5NKEargCvq09TKJEF8PFkH4QME"
+#define CHAT_ID "5937403861"
+
 const char* kCategoryLabels[kCategoryCount] = {
     "Knife", "Gun", "Neg"
 };
 
-
-
+WiFiClientSecure client;
+UniversalTelegramBot bot(BOTtoken, client);
 
 #define TEXT "starting app..."
 
@@ -128,6 +137,14 @@ void setup() {
   WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);//disable brownout detector
 
   Serial.begin(115200);
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(ssid, password);
+  client.setCACert(TELEGRAM_CERTIFICATE_ROOT);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("WiFi connected"); 
   init_camera();
   
   dstImage = (uint16_t *) malloc(DST_WIDTH * DST_HEIGHT*2);
@@ -211,7 +228,7 @@ void loop() {
   tm_to_disp=millis();
   while(millis()-tm_to_disp<5000){ 
 
-  Serial.println("in display");
+  //Serial.println("in display");
   fb = esp_camera_fb_get();
     if (!fb) {
       Serial.println("Camera capture failed");
@@ -291,7 +308,10 @@ void loop() {
   Serial.println(max_confidence);
   String detected= String(kCategoryLabels[idx]);
   Serial.println(detected);
+  if(idx==1){
+    bot.sendMessage(CHAT_ID, "weapon detected!");
+  }
   
-  delay(2000);
+  delay(500);
 
 }
