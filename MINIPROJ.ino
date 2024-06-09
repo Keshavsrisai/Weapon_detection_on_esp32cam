@@ -38,11 +38,11 @@
 
 unsigned long tm_to_disp;
 
-const char* ssid = "Keshav";
-const char* password = "miniproject";
+const char* ssid = "***";
+const char* password = "*****";
 
-#define BOTtoken "7023014883:AAF4C_Ksz5NKEargCvq09TKJEF8PFkH4QME"
-#define CHAT_ID "5937403861"
+#define BOTtoken "*********"
+#define CHAT_ID "**********"
 
 const char* kCategoryLabels[kCategoryCount] = {
     "Knife", "Gun", "Neg"
